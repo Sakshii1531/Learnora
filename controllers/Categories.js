@@ -1,8 +1,8 @@
-const Tag = require("../models/tags");
+const category = require("../models/categories");
 
 //create tah ka handler function
 
-exports.createTag = async(req , res) => {
+exports.createCategory = async(req , res) => {
     try{
         const {name,description} = req.body;
         
@@ -15,7 +15,7 @@ exports.createTag = async(req , res) => {
         }
 
         //create entry in DB
-        const tagDetails = await Tag.create({
+        const tagDetails = await category.create({
             name:name,
             description:description,
         });
@@ -25,7 +25,7 @@ exports.createTag = async(req , res) => {
         //return response
         return res.status(200).json({
             success:true,
-            message:"Tag created successfully",
+            message:"Category created successfully",
         });
 
     } catch(error){
@@ -38,12 +38,12 @@ exports.createTag = async(req , res) => {
 
 
 //get all tags
-exports.showlAlltags = async(Req , res) => {
+exports.showlAllcategory = async(Req , res) => {
     try{
-        const allTags = await Tag.find({} , {name:true , description:true});
+        const allTags = await category.find({} , {name:true , description:true});
         res.status(200).json({
             success:true,
-            message:"All tags returned successfully",
+            message:"All category returned successfully",
             allTags,
         });
 
@@ -51,7 +51,7 @@ exports.showlAlltags = async(Req , res) => {
         return res.status(500).json({
             success:false,
             message:error.message,
-            message:"Tags are not showing , because of some error",
+            message:"Category are not showing , because of some error",
         });
     }
 }

@@ -1,5 +1,5 @@
 const Course = require("../models/Course");
-const Tag = require("../models/tags");
+const Category = require("../models/categories");
 const User = require("../models/User");
 const {uploadImageToCloudinary} = require("../utils/imageUploader");
 
@@ -32,11 +32,11 @@ exports.createCourse = async (req , res) =>{
         }
 
         //check given tag is valid or not
-        const tagDetails = await Tag.findById(tag);
+        const tagDetails = await Category.findById(tag);
         if(!tagDetails){
             return res.status(404).json({
                 success:false,
-                message:"Tag Details not found",
+                message:"Category Details not found",
             });
         }
 
