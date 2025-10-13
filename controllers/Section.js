@@ -29,7 +29,7 @@ exports.createSection = async (req , res )=> {
         )
         //hw -> use populate to replace section/sub-section both in the updatedCourseDetails
 
-
+  
         //return response
         return res.status(200).json({
             success:true,
@@ -87,7 +87,8 @@ exports.deleteSection = async (req , res) => {
 
         //use findby id and delete
         await Section.findByIdAndDelete(sectionId);
-
+         
+        // do we need to delete from courseSchema
         //return response
          return res.status(200).json({
             succsess:true,
