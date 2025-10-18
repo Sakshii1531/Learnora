@@ -55,3 +55,49 @@ exports.showlAllcategory = async(Req , res) => {
         });
     }
 }
+
+exports.categoryPageDetails = async(req ,res) => {
+    try{
+        //get category id
+        const {categoryId} = req.body;
+
+        //get courses for specified categoryId
+        const selectedCategory = await Category.findById(categoryId)
+                                       .populate("course")
+                                       .exec();
+
+        //validation
+        if(!selectedCategory){
+            return res.status(404).json({
+                success:false,
+                message:'Data is not found',
+            });
+        }
+
+        //get course for different categories
+        const differentCategories = await Category.find({
+                                    _id:{$ne:categoryId},
+                                    })
+                                    .populate("courses")
+                                    .exec(); 
+                                    
+        //get top selling course => H.W.
+        
+        //return response
+        return res.status(200).json({
+            success:true,
+            data:{
+                selectedCategory,
+                differentCategories,
+            },
+        });
+
+
+    } catch(error){
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        });
+
+    }
+} 
