@@ -1,101 +1,81 @@
-const Category = require('../models/Category');
+const Category = require('../models/categories');
 
-//create tag handler
+// Create Category Handler
 exports.createCategory = async (req, res) => {
-    try {
-
-        //fetch data
-        const {name, description} = req.body;
-        //validation
-        if(!name) {
-            return res
-                .status(404)
-                .json({
-                success: false,
-                message: 'All fields are required'
-            })
-        }
-
-        //create entry in DB
-        const CategoryDetails = await Category.create({
-            name: name,
-            description: description,
-        });
-        console.log(CategoryDetails);
-        //return response
-        return res.status(200).json({
-            success: true,
-            message: 'Category Created Successfully',
-        });
-
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message,
-        });
+  try {
+    const { name, description } = req.body;
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name field is required'
+      });
     }
+
+    const categoryDetails = await Category.create({
+      name,
+      description,
+    });
+    return res.status(201).json({
+      success: true,
+      message: 'Category created successfully',
+      data: categoryDetails,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
+// Show All Categories
 exports.showAllCategories = async (req, res) => {
-    try {
-        const allCategories = await Category.find(
-            {}, 
-            {name: true, description: true}
-        );
-        res.status(200).json({
-            success: true,
-            message: "All tags returned successfully",
-            data: allCategories,
-        })
+  try {
+    const allCategories = await Category.find({}, { name: true, description: true });
+    res.status(200).json({
+      success: true,
+      message: "All categories returned successfully",
+      data: allCategories,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
-    } catch(error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        })
-    }
-}
-
-//categoryPageDetails
+// Category Page Details
 exports.categoryPageDetails = async (req, res) => {
-    try {
-        //get categoryId
-        const {categoryId} = req.body;
-        //get courses for specified categoryId
-        const selectedCategory = await Category.findById(categoryId)
-                                        .populate("courses")
-                                        .exec();
-        //validation
-        if(!selectedCategory) {
-            return res.status(404).json({
-                success: false,
-                message: "Data Not Found",
-            });
-        }
-        //get courses for different categories
-        const differentCategories = await Category.find({
-                                    _id:  {$ne: categoryId},
-                                    })
-                                    .populate("courses")
-                                    .exec();
-
-        //get top selling courses 
-        //HW - write it on your own
-
-        //return response
-        return res.status(200).json({
-            success: true,
-            data: {
-                selectedCategory,
-                differentCategories,
-            }
-        })
-
-    } catch(error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: error.message,
-        });
+  try {
+    const { categoryId } = req.body;
+    const selectedCategory = await Category.findById(categoryId)
+      .populate("courses")
+      .exec();
+    if (!selectedCategory) {
+      return res.status(404).json({
+        success: false,
+        message: "Data Not Found",
+      });
     }
-}
+
+    const differentCategories = await Category.find({ _id: { $ne: categoryId } })
+      .populate("courses")
+      .exec();
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        selectedCategory,
+        differentCategories,
+      }
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
