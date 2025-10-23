@@ -12,7 +12,7 @@ const {
   showAllCategories,
   createCategory,
   categoryPageDetails,
-} = require("../controllers/categories");
+} = require("../controllers/Categories");
 
 const {
   createSection,
